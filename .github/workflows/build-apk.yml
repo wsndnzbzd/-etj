@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LingQianAndroid
 
     steps:
       - name: Checkout source
@@ -22,12 +25,10 @@ jobs:
           java-version: '17'
 
       - name: Set up Android SDK
-        run: |
-          echo "ANDROID_HOME=$ANDROID_HOME" >> "$GITHUB_ENV"
-          echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
+        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK packages
-        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -41,6 +42,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LingQian-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: LingQianAndroid/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14
